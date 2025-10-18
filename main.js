@@ -28,6 +28,27 @@ divDataUser.innerHTML = `
 }
 }
 
+async function gerarNovoToken() {
+  const token = localStorage.getItem('token')
+  const getEmail = localStorage.getItem('userEmail')
+  const res = await fetch('https://backend-syncnote.onrender.com/newToken', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({email : getEmail })
+  });
+
+  const data = await res.json()
+
+  if (res.ok) {
+    alert('Novo token gerado')
+    localStorage.setItem('token', data.token)
+  } else {
+    alert('usuario nao autorizado')
+  }
+}
 
 async function saveNote() {
 
@@ -43,7 +64,6 @@ async function saveNote() {
     
     const res = await fetch('https://backend-syncnote.onrender.com/notes', {
         method: 'POST',
-        
         headers: {
         'Content-Type' : 'application/json',
         'Authorization': `Bearer ${token}`
