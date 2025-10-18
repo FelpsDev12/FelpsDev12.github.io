@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+<section class="register">
+        <h1>API Cadastro</h1>
+
+        <input type="text" id="inputNome" placeholder="Nome">
+        <input type="email" id="inputEmail" placeholder="Email">
+        <input type="password" id="inputSenha" placeholder="Senha">
+
+        <button id="btnConfirm" type="submit" onclick="cadastro()">Registrar</button>
+        <button id="btnLogin" type="submit" onclick="loginPage()">Login</button>
+        </section>
+
+        <section class="login" style="display: none;">
+          <h1>API Login</h1>
+ 
+          <input type="text" id="inputNomeL" placeholder="Nome">
+        <input type="email" id="inputEmailL" placeholder="Email">
+        <input type="password" id="inputSenhaL" placeholder="Senha">
+
+        <button id="btnConfirm" type="submit" onclick="login()">Login</button>
+        <button id="btnCadastro" type="submit" onclick="cadastroPage()">Cadastro</button>
+        </section>
+        </section>
+
+ </main>
+    
+ <script src="index.js"></script>
+ <script src="funcoes.js"></script>
+</body>
+</html>

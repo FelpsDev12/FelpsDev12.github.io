@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <div class="personalizacao">
+    <section id="btnModos">
+      <button id="modoCor">Cores</button>
+      <button id="modoFonte">Fontes</button>
+    </section>
+    <div id="selectCor">
+  <div class="color-option" data-color="padrao">⚪</div>
+  <div class="color-option" data-color="preto">⚫</div>
+  <div class="color-option" data-color="azul">🔵</div>
+  <div class="color-option" data-color="cinza">⚫</div>
+  <div class="color-option" data-color="branco">⚪</div>
+  <div class="color-option" data-color="cinza-escuro">⚫</div>
+</div>
+</div>
+
+<style>
+#selectCor {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* duas colunas */
+  gap: 8px;
+  margin-left: 4.5%;
+  width: 100px;
+}
+
+.color-option {
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.color-option:hover {
+  background: #eee;
+}
+.color-option.selected {
+  background: #ccc;
+}
+
+#btnModos button{
+  width: 100px;
+}
+</style>
+
+<script>
+const options = document.querySelectorAll('.color-option');
+
+options.forEach(opt => {
+  opt.addEventListener('click', () => {
+    options.forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    console.log("Selecionado:", opt.dataset.color);
+  });
+});
+</script>
+
+    
+</body>
+</html>
