@@ -9,7 +9,7 @@ inputTitle.addEventListener('input', function(){
 async function getDados() {   
   const token = localStorage.getItem('token');
 const res = await fetch('https://backend-syncnote.onrender.com/user', {
-  headers: { 'Authorization': `Bearer ${token}` }
+  credentials: 'include',
 });
 
 if (res.status === 401 || res.status === 403) {
@@ -30,7 +30,6 @@ divDataUser.innerHTML = `
 
 async function gerarNovoToken() {
   const email = localStorage.getItem('userEmail')
-  const token = localStorage.getItem('token')
 
   const res = await fetch('https://backend-syncnote.onrender.com/newToken', {
     method: 'POST',
@@ -144,14 +143,15 @@ window.addEventListener("visibilitychange", () => {
   }
 });
 
-function verificarTokenExistente () {
-  const token = localStorage.getItem('token')
+async function verificarTokenExistente () {
+  const res = await fetch('https://backend-syncnote.onrender.com/user', {
+    method: 'GET',
+    credentials: 'include'
+  });
 
-  if (token === null || token === undefined) {
-    console.log('sem token')
-    window.location.href = '/'
-  } else {
-    return;
+  if (!res.ok) {
+    console.log('Usuário não autenticado');
+    window.location.href = '/index.html';
   }
 }
 
