@@ -14,7 +14,7 @@ async function cadastro() {
 
   try {
 
-    const res = await fetch('http://localhost:3000/users', {
+    const res = await fetch('https://backend-syncnote.onrender.com/users', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password })
@@ -27,7 +27,7 @@ async function cadastro() {
         const email = document.getElementById('inputEmail').value;
         const password = document.getElementById('inputSenha').value;
 
-        const res = await fetch('http://localhost:3000/login', {
+        const res = await fetch('https://backend-syncnote.onrender.com/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
@@ -66,7 +66,7 @@ async function login() {
   }
 
   try {
-    const res = await fetch('http://localhost:3000/login', {
+    const res = await fetch('https://backend-syncnote.onrender.com/login', {
       method: 'POST',
       headers: { 'Content-Type': "application/json" },
       body: JSON.stringify({ email, password })
