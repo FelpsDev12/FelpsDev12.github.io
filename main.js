@@ -11,8 +11,12 @@ async function getDados() {
 const res = await fetch('http://localhost:3000/user', {
   headers: { 'Authorization': `Bearer ${token}` }
 });
-const user = await res.json();
-console.log(user);
+
+if (res.status === 401 || res.status === 403) {
+  localStorage.removeItem('token')
+  window.location.href = '/'
+} else {
+  const user = await res.json();
 
 const divDataUser = document.getElementById('userData');
 
@@ -21,6 +25,8 @@ divDataUser.innerHTML = `
 <label id='role'>${user.role}</label>
 `
 }
+}
+
 
 async function saveNote() {
 
@@ -116,6 +122,18 @@ window.addEventListener("visibilitychange", () => {
   }
 });
 
+function verificarTokenExistente () {
+  const token = localStorage.getItem('token')
 
+  if (token === null || token === undefined) {
+    console.log('sem token')
+    window.location.href = '/'
+  } else {
+    return;
+  }
+}
+
+window.onload = verificarTokenExistente()
+  
 window.onload = listarNotas()
 window.onload = getDados

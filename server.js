@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken")
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs")
 require("dotenv").config()
-const { request } = require("https");
 
 const User = require("./models/User")
 const Note = require("./models/Notas")
