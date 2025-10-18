@@ -8,7 +8,7 @@ inputTitle.addEventListener('input', function(){
 
 async function getDados() {   
   const token = localStorage.getItem('token');
-const res = await fetch('http://localhost:3000/user', {
+const res = await fetch('https://backend-syncnote.onrender.com/user', {
   headers: { 'Authorization': `Bearer ${token}` }
 });
 
@@ -17,6 +17,7 @@ if (res.status === 401 || res.status === 403) {
   window.location.href = '/'
 } else {
   const user = await res.json();
+  console.log(user);
 
 const divDataUser = document.getElementById('userData');
 
@@ -40,7 +41,7 @@ async function saveNote() {
         return;
     }
     
-    const res = await fetch('http://localhost:3000/notes', {
+    const res = await fetch('https://backend-syncnote.onrender.com/notes', {
         method: 'POST',
         
         headers: {
@@ -76,7 +77,7 @@ async function listarNotas() {
 
     const token = localStorage.getItem('token')
 
-    const res = await fetch('http://localhost:3000/notes', {
+    const res = await fetch('https://backend-syncnote.onrender.com/notes', {
       headers: {
         'Authorization': `Bearer ${token}`
       },
