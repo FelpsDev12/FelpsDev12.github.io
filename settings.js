@@ -5,7 +5,7 @@ async function verificarPalavra() {
     const usernameVerify = inputUpdateNome.value
     const token = localStorage.getItem('token')
 
-    const res = await fetch('http://localhost:3000/check-username', {
+    const res = await fetch('https://backend-syncnote.onrender.com/check-username', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ inputUpdateNome.addEventListener('keydown', async function(e){
             return;
         }
 
-        const res = await fetch('http://localhost:3000/updateUsername', {
+        const res = await fetch('https://backend-syncnote.onrender.com/updateUsername', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ inputUpdateEmail.addEventListener('keydown', async function(e){
     const token = localStorage.getItem('token')
     const newEmail = inputUpdateEmail.value
 
-    const res = await fetch('http://localhost:3000/updateEmail', {
+    const res = await fetch('https://backend-syncnote.onrender.com/updateEmail', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
