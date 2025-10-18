@@ -34,17 +34,15 @@ async function gerarNovoToken() {
 
   const res = await fetch('https://backend-syncnote.onrender.com/newToken', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
+    headers: {'Content-Type': 'application/json'},
+    credentials: 'include',
     body: JSON.stringify({email : email})
   });
 
   const data = await res.json()
 
   if (res.ok) {
-   localStorage.setItem('token', data.token)
+    console.log('novo token gerado')
   } else {
     alert('usuario nao autorizado')
   }
