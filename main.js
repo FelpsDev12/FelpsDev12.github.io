@@ -9,7 +9,7 @@ inputTitle.addEventListener('input', function(){
 async function getDados() {   
   const token = localStorage.getItem('token');
 const res = await fetch('https://backend-syncnote.onrender.com/user', {
-  credentials: 'include',
+  headers: { 'Authorization': `Bearer ${token}` }
 });
 
 if (res.status === 401 || res.status === 403) {
@@ -26,26 +26,6 @@ divDataUser.innerHTML = `
 <label id='role'>${user.role}</label>
 `
 }
-}
-
-async function gerarNovoToken() {
-  const email = localStorage.getItem('userEmail')
-
-  const res = await fetch('https://backend-syncnote.onrender.com/newToken', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    credentials: 'include',
-    body: JSON.stringify({email : email})
-  });
-
-  const data = await res.json()
-
-  if (res.ok) {
-    console.log('novo token gerado')
-  } else {
-    alert('usuario nao autorizado')
-  }
-  
 }
 
 
@@ -143,15 +123,14 @@ window.addEventListener("visibilitychange", () => {
   }
 });
 
-async function verificarTokenExistente () {
-  const res = await fetch('https://backend-syncnote.onrender.com/user', {
-    method: 'GET',
-    credentials: 'include'
-  });
+function verificarTokenExistente () {
+  const token = localStorage.getItem('token')
 
-  if (!res.ok) {
-    console.log('Usuário não autenticado');
-    window.location.href = '/index.html';
+  if (token === null || token === undefined) {
+    console.log('sem token')
+    window.location.href = '/'
+  } else {
+    return;
   }
 }
 
