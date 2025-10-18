@@ -28,6 +28,29 @@ divDataUser.innerHTML = `
 }
 }
 
+async function gerarNovoToken() {
+  const email = localStorage.getItem('userEmail')
+  const token = localStorage.getItem('token')
+
+  const res = await fetch('https://backend-syncnote.onrender.com/newToken', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({email : email})
+  });
+
+  const data = await res.json()
+
+  if (res.ok) {
+   localStorage.setItem('token', data.token)
+  } else {
+    alert('usuario nao autorizado')
+  }
+  
+}
+
 
 async function saveNote() {
 
