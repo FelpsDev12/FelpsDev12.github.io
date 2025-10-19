@@ -43,8 +43,27 @@ async function gerarNovoToken() {
   const data = await res.json()
 
   if (res.ok) {
+    
     alert('Novo token gerado')
     localStorage.setItem('token', data.token)
+
+    const res = await fetch('https://backend-syncnote.onrender.com/invalidar-tokens', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const dataInvalidTokens = await res.json()
+
+    if (res.ok) {
+      alert(dataInvalidTokens.message);
+
+      localStorage.removeItem('token');
+    } else {
+       alert(dataInvalidTokens.error || 'Erro ao desconectar dispositivos')
+    }
   } else {
     alert('usuario nao autorizado')
   }
