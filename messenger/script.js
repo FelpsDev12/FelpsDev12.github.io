@@ -11,7 +11,7 @@ const getUserId = localStorage.getItem('userId')
 const user_data = document.querySelector('.user_data')
 const loveable_icon = document.getElementById('loveable_icon_svg')
 
-const API_URL = 'http://localhost:3000'
+const API_URL = 'https://backend-loveable.onrender.com'
 let user
 
 const colors = [
@@ -368,3 +368,4 @@ setInterval(() => {
 window.addEventListener('load', async () => {
   await autoLogin()
 }) 
+
