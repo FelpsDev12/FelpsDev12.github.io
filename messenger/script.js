@@ -88,7 +88,7 @@ async function Login() {
   auth_container.style.display = 'none'
   main.style.display = ''
 
-  ws = new WebSocket('ws://localhost:3000')
+  ws = new WebSocket('ws://backend-loveable.onrender.com')
   ws.onmessage = processMessage
 }
 
@@ -123,7 +123,7 @@ async function Register() {
 
     auth_container.style.display = "none";
     main.style.display = "";
-    ws = new WebSocket("ws://localhost:3000");
+    ws = new WebSocket("ws://ws://backend-loveable.onrender.com");
     ws.onmessage = processMessage;
 
   } catch (error) {
