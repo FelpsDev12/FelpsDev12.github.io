@@ -11,6 +11,7 @@ const getUserId = localStorage.getItem('userId')
 const user_data = document.querySelector('.user_data')
 const loveable_icon = document.getElementById('loveable_icon_svg')
 
+const WS_URL = 'wss://backend-loveable.onrender.com'
 const API_URL = 'https://backend-loveable.onrender.com'
 let user
 
@@ -111,7 +112,7 @@ async function Login() {
   auth_container.style.display = 'none'
   main.style.display = ''
 
-  ws = new WebSocket('wss://backend-loveable.onrender.com');
+  ws = new WebSocket(`${WS_URL}`);
   ws.onmessage = processMessage;
 }
 
@@ -146,7 +147,7 @@ async function Register() {
 
     auth_container.style.display = "none";
     main.style.display = "";
-    ws = new WebSocket("wss://backend-loveable.onrender.com");
+    ws = new WebSocket(`${WS_URL}`);
     ws.onmessage = processMessage;
 
   } catch (error) {
@@ -302,7 +303,7 @@ async function autoLogin() {
       auth_container.style.display = 'none';
       main.style.display = '';
 
-      ws = new WebSocket('wss://backend-loveable.onrender.com');
+      ws = new WebSocket(`${WS_URL}`);
 
       ws.onopen = async () => {
         const token = localStorage.getItem('token');
@@ -359,7 +360,7 @@ window.addEventListener("beforeunload", async () => {
 
 setInterval(() => {
   getOtherStatus()
-}, 2000)
+}, 3000)
 
 setInterval(() => {
   setStatus()
@@ -367,6 +368,8 @@ setInterval(() => {
 
 window.addEventListener('load', async () => {
   await autoLogin()
+  await getOtherStatus
+ setStatus
 }) 
 
 
