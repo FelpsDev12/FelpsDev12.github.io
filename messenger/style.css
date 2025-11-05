@@ -27,7 +27,25 @@ header {
     justify-self: center;
 }
 
-header a {
+.user_data {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 20px;
+}
+
+.user_data p {
+    width: 30px;
+    height: 30px;
+    order: 1;
+}
+
+.user_data p svg {
+    width: 100%;
+    height: 100%;
+}
+
+header > a {
     width: 70px;
     height: 70px;
     border-radius: 90px;
@@ -89,9 +107,9 @@ main {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 5dvh;
+    margin-top: 10dvh;
     padding: 10px;
-    height: 70dvh;
+    height: 67dvh;
     overflow-y: auto;
 }
 
