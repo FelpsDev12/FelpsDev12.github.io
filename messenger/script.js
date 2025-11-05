@@ -8,6 +8,7 @@ const message_self_content = document.querySelector('.message_self')
 const messages_box = document.querySelector('.messages_box')
 const btn_login = document.getElementById('btn_login')
 const getUserId = localStorage.getItem('userId')
+const token = localStorage.getItem('token')
 const user_data = document.querySelector('.user_data')
 const loveable_icon = document.getElementById('loveable_icon_svg')
 
@@ -112,7 +113,7 @@ async function Login() {
   auth_container.style.display = 'none'
   main.style.display = ''
 
-  ws = new WebSocket(`${WS_URL}`);
+  ws = new WebSocket(`${WS_URL}?token=${token}`);
   ws.onmessage = processMessage;
 }
 
@@ -147,7 +148,7 @@ async function Register() {
 
     auth_container.style.display = "none";
     main.style.display = "";
-    ws = new WebSocket(`${WS_URL}`);
+    ws = new WebSocket(`${WS_URL}?token=${token}`);
     ws.onmessage = processMessage;
 
   } catch (error) {
@@ -303,7 +304,7 @@ async function autoLogin() {
       auth_container.style.display = 'none';
       main.style.display = '';
 
-      ws = new WebSocket(`${WS_URL}`);
+      ws = new WebSocket(`${WS_URL}?token=${token}`);
 
       ws.onopen = async () => {
         const token = localStorage.getItem('token');
@@ -338,17 +339,25 @@ btn_login.addEventListener('click', async function () {
 
 input_box.addEventListener('submit', sendMessage)
 
-window.addEventListener("beforeunload", () => {
-  const token = localStorage.getItem("token");
-  const url = `${API_URL}/status/status-offline`;
+window.addEventListener("beforeunload", async () => {
+  const token = localStorage.getItem('token')
 
-  if (!token) return;
+  try {
+    const res = await fetch(`${API_URL}/status/status-offline`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
 
-  const blob = new Blob([], { type: "application/json" });
-  navigator.sendBeacon(url, blob);
+    if (!res.ok) {
+      return console.log('Erro ao atualizar status do usuário');
+    }
+  } catch (error) {
+    console.error(error)
+  }
 });
-
-
 
 setInterval(() => {
   getOtherStatus()
