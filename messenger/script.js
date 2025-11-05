@@ -338,25 +338,19 @@ btn_login.addEventListener('click', async function () {
 
 input_box.addEventListener('submit', sendMessage)
 
-window.addEventListener("beforeunload", async () => {
-  const token = localStorage.getItem('token')
+window.addEventListener("beforeunload", () => {
+  const token = localStorage.getItem('token');
 
-  try {
-    const res = await fetch(`${API_URL}/status/status-offline`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
+  const url = `${API_URL}/status/status-offline`;
+  const headers = {
+    type: "application/json",
+  };
 
-    if (!res.ok) {
-      return console.log('Erro ao atualizar status do usuário');
-    }
-  } catch (error) {
-    console.error(error)
-  }
+  const body = JSON.stringify({});
+
+  navigator.sendBeacon(`${url}?token=${token}`, body);
 });
+
 
 setInterval(() => {
   getOtherStatus()
