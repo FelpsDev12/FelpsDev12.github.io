@@ -111,7 +111,7 @@ async function Login() {
   auth_container.style.display = 'none'
   main.style.display = ''
 
-  ws = new WebSocket('ws://localhost:3000');
+  ws = new WebSocket('ws://backend-loveable.onrender.com');
   ws.onmessage = processMessage;
 }
 
@@ -146,7 +146,7 @@ async function Register() {
 
     auth_container.style.display = "none";
     main.style.display = "";
-    ws = new WebSocket("ws://localhost:3000");
+    ws = new WebSocket("ws://backend-loveable.onrender.com");
     ws.onmessage = processMessage;
 
   } catch (error) {
@@ -302,7 +302,7 @@ async function autoLogin() {
       auth_container.style.display = 'none';
       main.style.display = '';
 
-      ws = new WebSocket('ws://localhost:3000');
+      ws = new WebSocket('ws://backend-loveable.onrender.com');
 
       ws.onopen = async () => {
         const token = localStorage.getItem('token');
@@ -368,4 +368,5 @@ setInterval(() => {
 window.addEventListener('load', async () => {
   await autoLogin()
 }) 
+
 
