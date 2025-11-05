@@ -239,7 +239,6 @@ async function autoLogin() {
       });
 
       if (!res.ok) {
-        alert('Token inválido, removendo login salvo.');
         return;
       }
 
@@ -254,12 +253,11 @@ async function autoLogin() {
       auth_container.style.display = 'none';
       main.style.display = '';
 
-      ws = new WebSocket('ws://localhost:3000');
+      ws = new WebSocket(API_URL.replace('https', 'wss'))
       ws.onmessage = processMessage;
 
       console.log('Login automático:', user);
-
-      await carregarMensagens()
+      await carregarMensagens();
     } catch (error) {
       console.error('Erro ao validar token:', error);
     }
