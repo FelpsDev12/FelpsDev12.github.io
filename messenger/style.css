@@ -1,0 +1,172 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --branco_padrao: #c7c3c3;
+    --branco_claro: #fff;
+    font-family: 'Inter', sans-serif;
+}
+
+body,html {
+    background: #333;
+    padding: 10px;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    border: solid #c7c3c3;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    position: fixed;
+    width: 95%;
+    justify-self: center;
+}
+
+header a {
+    width: 70px;
+    height: 70px;
+    border-radius: 90px;
+    padding: 3px;   
+}
+
+header a svg {
+    width: 100%;
+    height: 100%;
+}
+
+header a svg g {
+    fill: orangered;
+}
+
+.auth_container {
+    position: absolute;
+    justify-self: center;
+    margin-top: 33.33dvh;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border: solid var(--branco_claro);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.auth_container input {
+    padding: 5px;
+    border: solid var(--branco_claro);
+    background: #414040;
+    border-radius: 10px;
+}
+
+.auth_container button {
+    padding: 5px;
+    color: var(--branco_claro);
+    background: #333;
+    border: solid var(--branco_claro);
+    border-radius: 10px;
+}
+
+main {
+    margin-top: 2dvh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.box_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 78%;
+}
+
+.messages_box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 5dvh;
+    padding: 10px;
+    height: 70dvh;
+    overflow-y: auto;
+}
+
+.messages_box .other_message .username,
+.messages_box .self_message .username {
+    font-size: 14px;
+}
+
+.messages_box .message_other,
+.messages_box .message_self {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    word-wrap: break-word;
+}
+
+.messages_box .message_self {
+    align-self: end;
+    background: var(--branco_claro);
+    border-radius: 10px;
+    border-bottom-right-radius: 0px;
+    border: solid black;
+    width: 100%;
+    max-width: 150px;
+    padding: 5px;
+    color: black;
+}
+
+.messages_box .message_other {
+    align-self: start;
+     background: #1f1e1e;
+    border-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border: solid black;
+    width: 100%;
+    max-width: 150px;
+    padding: 5px;
+    color: var(--branco_claro);
+} 
+
+.input_box {
+    display: flex;
+    padding: 10px;
+    position: fixed;
+    border: solid var(--branco_claro);
+    border-radius: 10px;
+    justify-content: space-between;
+    box-shadow: var(--branco_padrao) 1px 2px 1px;
+    width: 95%;
+    align-self: center;
+    margin-top: 78dvh;
+}
+
+.input_box input {
+  width: calc(100% - 100px);
+  padding: 5px;
+  border: solid var(--branco_claro);
+  border-radius: 5px;
+  background: #414040;
+  outline: none;
+  color: var(--branco_claro);
+}
+
+.input_box input::placeholder {
+    color: var(--branco_padrao);
+}
+
+.input_box button {
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+    border-radius: 20px;
+}
+
+.input_box button svg {
+    width: 100%;
+    height: 100%;
+}
