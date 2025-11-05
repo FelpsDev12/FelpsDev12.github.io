@@ -60,6 +60,8 @@ function setStatus() {
   const getStatus = localStorage.getItem('status')
   const getUsername = localStorage.getItem('partnerUsername')
 
+  user_data.style.display = ''
+
   if (getStatus === 'true') {
     loveable_icon.style.fill = '#04ff04'
     user_data.innerHTML = `
