@@ -123,7 +123,7 @@ async function Register() {
 
     auth_container.style.display = "none";
     main.style.display = "";
-    ws = new WebSocket("ws://ws://backend-loveable.onrender.com");
+    ws = new WebSocket("ws://backend-loveable.onrender.com");
     ws.onmessage = processMessage;
 
   } catch (error) {
