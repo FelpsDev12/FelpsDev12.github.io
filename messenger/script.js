@@ -11,7 +11,7 @@ const getUserId = localStorage.getItem('userId')
 const user_data = document.querySelector('.user_data')
 const loveable_icon = document.getElementById('loveable_icon_svg')
 
-const API_URL = 'https://backend-loveable.onrender.com'
+const API_URL = 'http://localhost:3000'
 let user
 
 const colors = [
@@ -110,7 +110,6 @@ async function Login() {
 
   auth_container.style.display = 'none'
   main.style.display = ''
-  await carregarMensagens();
 
   ws = new WebSocket('ws://localhost:3000');
   ws.onmessage = processMessage;
@@ -147,7 +146,6 @@ async function Register() {
 
     auth_container.style.display = "none";
     main.style.display = "";
-    await carregarMensagens();
     ws = new WebSocket("ws://localhost:3000");
     ws.onmessage = processMessage;
 
@@ -369,7 +367,4 @@ setInterval(() => {
 
 window.addEventListener('load', async () => {
   await autoLogin()
-  await getOtherStatus
-  setStatus
 }) 
-
