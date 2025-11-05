@@ -110,6 +110,7 @@ async function Login() {
 
   auth_container.style.display = 'none'
   main.style.display = ''
+  await carregarMensagens();
 
   ws = new WebSocket('ws://localhost:3000');
   ws.onmessage = processMessage;
@@ -146,6 +147,7 @@ async function Register() {
 
     auth_container.style.display = "none";
     main.style.display = "";
+    await carregarMensagens();
     ws = new WebSocket("ws://localhost:3000");
     ws.onmessage = processMessage;
 
@@ -370,3 +372,4 @@ window.addEventListener('load', async () => {
   await getOtherStatus
   setStatus
 }) 
+
