@@ -361,7 +361,7 @@ window.addEventListener("beforeunload", async () => {
 
 setInterval(() => {
   getOtherStatus()
-}, 3000)
+}, 2000)
 
 setInterval(() => {
   setStatus()
@@ -372,6 +372,7 @@ window.addEventListener('load', async () => {
   await getOtherStatus
  setStatus
 }) 
+
 
 
 
