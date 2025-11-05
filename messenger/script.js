@@ -339,17 +339,15 @@ btn_login.addEventListener('click', async function () {
 input_box.addEventListener('submit', sendMessage)
 
 window.addEventListener("beforeunload", () => {
-  const token = localStorage.getItem('token');
-
+  const token = localStorage.getItem("token");
   const url = `${API_URL}/status/status-offline`;
-  const headers = {
-    type: "application/json",
-  };
 
-  const body = JSON.stringify({});
+  if (!token) return;
 
-  navigator.sendBeacon(`${url}?token=${token}`, body);
+  const blob = new Blob([], { type: "application/json" });
+  navigator.sendBeacon(url, blob);
 });
+
 
 
 setInterval(() => {
