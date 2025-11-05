@@ -20,6 +20,7 @@ header {
     display: flex;
     border: solid #c7c3c3;
     align-items: center;
+    background: #333;
     gap: 10px;
     border-radius: 10px;
     position: fixed;
