@@ -2,6 +2,7 @@ const auth_container = document.querySelector('.auth_container')
 const username_input = document.getElementById('username_input')
 const main = document.querySelector('main')
 const input_message = document.getElementById('input_message')
+const send_message = document.getElementById("send_message")
 const input_box = document.querySelector('.input_box')
 const message_self = document.querySelector('.message_self')
 const message_self_content = document.querySelector('.message_self')
@@ -11,6 +12,7 @@ const getUserId = localStorage.getItem('userId')
 const token = localStorage.getItem('token')
 const user_data = document.querySelector('.user_data')
 const loveable_icon = document.getElementById('loveable_icon_svg')
+const love_box = document.querySelector('.love_box')
 
 const WS_URL = 'wss://backend-loveable.onrender.com'
 const API_URL = 'https://backend-loveable.onrender.com'
@@ -51,11 +53,6 @@ async function carregarMensagens() {
 
     messages_box.appendChild(element);
   });
-
-  window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: 'smooth'
-  });
 }
 
 function setStatus() {
@@ -80,42 +77,37 @@ function setStatus() {
 }
 
 async function Login() {
-  const username = username_input.value.trim()
-
-  if (!username) return alert('Digite um nome para logar')
+  const username = username_input.value.trim();
+  if (!username) return alert('Digite um nome para logar');
 
   const res = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ username })
-  })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username }),
+  });
 
-  const data = await res.json()
-
-  if (!res.ok) {
-    return alert(data.error);
-  }
+  const data = await res.json();
+  if (!res.ok) return alert(data.error);
 
   user = {
     id: data.userId,
     name: username,
     color: getRandomColor(),
-  }
+  };
 
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('userId', data.userId);
 
-  localStorage.setItem('token', data.token)
+  auth_container.style.display = 'none';
+  main.style.display = '';
 
-  const userId = data.userId
-  localStorage.setItem('userId', userId)
+  await carregarMensagens();
 
-  auth_container.style.display = 'none'
-  main.style.display = ''
-
-  ws = new WebSocket(`${WS_URL}?token=${token}`);
+  if (ws) ws.close();
+  ws = new WebSocket(`${WS_URL}?token=${data.token}`);
   ws.onmessage = processMessage;
 }
+
 
 async function Register() {
   try {
@@ -148,6 +140,8 @@ async function Register() {
 
     auth_container.style.display = "none";
     main.style.display = "";
+
+    carregarMensagens()
     ws = new WebSocket(`${WS_URL}?token=${token}`);
     ws.onmessage = processMessage;
 
@@ -195,31 +189,45 @@ const createOtherElement = (username, userColor, message) => {
   return section
 }
 
+let audioCooldown = false
+
 const processMessage = ({ data }) => {
+  const { userId: senderId, username, userColor, message } = JSON.parse(data);
+  const userId = localStorage.getItem('userId');
 
-  const userId = localStorage.getItem('userId')
-  const { userId: senderId, username, userColor, message } = JSON.parse(data)
-
-  let element;
-
-  if (senderId === user.id) {
-    element = createSelfElement(username, userColor, message)
-  } else {
-    element = createOtherElement(username, userColor, message)
+  if (!message) {
+    return;
   }
 
+  const element = senderId === user.id
+    ? createSelfElement(username, userColor, message)
+    : createOtherElement(username, userColor, message);
 
-  messages_box.appendChild(element)
+  messages_box.appendChild(element);
 
-  window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: 'smooth'
-  })
+  if (/\bamo\b/i.test(message)) {
+    love_box.style.display = ''
 
+    setTimeout(() => {
+      love_box.style.display = 'none';
+    }, 2500);
+  }
+
+   if (!audioCooldown && String(senderId) !== String(user.id) && message.trim() !== '') {
+  const audio = new Audio('../assets/loveable_message.mp3');
+  audio.volume = 1.0;
+  audio.play();
+  audioCooldown = true;
+  setTimeout(() => (audioCooldown = false), 700);
 }
 
+  messages_box.scrollTo({
+    top: messages_box.scrollHeight,
+    behavior: 'smooth',
+  });
+};
+
 const sendMessage = async (event) => {
-  event.preventDefault()
 
   const message = {
     userId: user.id,
@@ -280,56 +288,47 @@ async function getOtherStatus() {
 
 async function autoLogin() {
   const savedToken = localStorage.getItem('token');
+  if (!savedToken) return;
 
-  if (savedToken) {
-    try {
-      const res = await fetch(`${API_URL}/auth/get-data`, {
-        headers: {
-          Authorization: `Bearer ${savedToken}`,
-        },
-      });
+  try {
+    const res = await fetch(`${API_URL}/auth/get-data`, {
+      headers: { Authorization: `Bearer ${savedToken}` },
+    });
+    if (!res.ok) return;
 
-      if (!res.ok) {
-        return;
+    const data = await res.json();
+    user = {
+      id: data.userId,
+      name: data.username,
+      color: getRandomColor(),
+    };
+
+    auth_container.style.display = 'none';
+    main.style.display = '';
+
+    if (ws) ws.close();
+    ws = new WebSocket(`${WS_URL}?token=${savedToken}`);
+
+    ws.onopen = async () => {
+      try {
+        await fetch(`${API_URL}/status/status-online`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${savedToken}`
+          }
+        });
+      } catch (err) {
+        console.error('Erro ao conectar com servidor:', err);
       }
+    };
 
-      const data = await res.json();
+    ws.onmessage = processMessage;
+    console.log('Login automático:', user);
 
-      user = {
-        id: data.userId,
-        name: data.username,
-        color: getRandomColor(),
-      };
-
-      auth_container.style.display = 'none';
-      main.style.display = '';
-
-      ws = new WebSocket(`${WS_URL}?token=${token}`);
-
-      ws.onopen = async () => {
-        const token = localStorage.getItem('token');
-
-        try {
-          const res = await fetch(`${API_URL}/status/status-online`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          if (!res.ok) return console.log('Erro ao atualizar status do usuário');
-        } catch (error) {
-          console.error('Erro ao conectar com servidor:', error);
-        }
-      };
-      ws.onmessage = processMessage;
-
-      console.log('Login automático:', user);
-      await carregarMensagens();
-    } catch (error) {
-      console.error('Erro ao validar token:', error);
-    }
+    await carregarMensagens();
+  } catch (err) {
+    console.error('Erro ao validar token:', err);
   }
 }
 
@@ -337,7 +336,7 @@ btn_login.addEventListener('click', async function () {
   Login()
 })
 
-input_box.addEventListener('submit', sendMessage)
+send_message.addEventListener('click', sendMessage)
 
 window.addEventListener("beforeunload", async () => {
   const token = localStorage.getItem('token')
@@ -361,7 +360,7 @@ window.addEventListener("beforeunload", async () => {
 
 setInterval(() => {
   getOtherStatus()
-}, 1000)
+}, 3000)
 
 setInterval(() => {
   setStatus()
@@ -372,8 +371,6 @@ window.addEventListener('load', async () => {
   await getOtherStatus
  setStatus
 }) 
-
-
 
 
 
