@@ -430,6 +430,58 @@ window.addEventListener('load', async () => {
   });
 });
 
+async function registrarPush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    console.warn('Push API não suportada neste navegador.');
+    return;
+  }
+
+  // registra o service worker
+  const reg = await navigator.serviceWorker.register('/service-worker.js');
+  console.log('✅ Service Worker registrado:', reg);
+
+  // pede permissão
+  const permission = await Notification.requestPermission();
+  if (permission !== 'granted') {
+    console.warn('Permissão de notificação negada.');
+    return;
+  }
+
+  // gera a subscription
+  const subscription = await reg.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array('BOO3-1Im0LUbrys9S-_ysIRHfdEBmFCf-LyGIaQegHKX2MEAT71ACd6QkmdMfz8Ef_uqbKv_9PlVtEhzRMWnsxU')
+  });
+
+  // envia para o backend salvar no user
+  const token = localStorage.getItem('token');
+  await fetch(`${API_URL}/auth/save-subscription`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(subscription)
+  });
+
+  console.log('🔔 Subscription salva no servidor!');
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+}
+
+window.addEventListener('load', async () => {
+  await autoLogin();
+  await getOtherStatus();
+  setStatus();
+  await registrarPush();
+});
+
+
 messages_box.addEventListener('click', async () => {
   const pickerDiv = document.querySelector('.emoji-picker-div');
   if (pickerDiv.style.display === '') {
