@@ -27,6 +27,64 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+async function Login() {
+  const username = username_input.value.trim();
+  if (!username) {
+    alert('Digite um nome de usuário!');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error('Erro no login:', data);
+      alert(data.error || 'Erro ao fazer login');
+      return;
+    }
+
+    // salva dados no localStorage
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userId', data.userId);
+    localStorage.setItem('username', data.username);
+
+    // define o usuário global
+    user = { id: data.userId, name: data.username, color: getRandomColor() };
+
+    auth_container.style.display = 'none';
+    main.style.display = '';
+
+    // abre conexão WebSocket
+    ws = new WebSocket(`${WS_URL}?token=${data.token}`);
+    ws.onmessage = processMessage;
+
+    // status online
+    await fetch(`${API_URL}/status/status-online`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data.token}`
+      }
+    });
+
+    // carrega mensagens após login
+    await carregarMensagens();
+
+    console.log('✅ Login concluído:', user);
+
+  } catch (err) {
+    console.error('Erro ao logar:', err);
+    alert('Erro ao conectar ao servidor');
+  }
+}
+
+
 function cortarText(text, maxLength = 40) {
   if (!text) return '';
   return text.length > maxLength ? text.substring(0, maxLength).trim() + '…' : text;
@@ -488,5 +546,6 @@ messages_box.addEventListener('click', async () => {
     pickerDiv.style.display = 'none'
   }
 })
+
 
 
