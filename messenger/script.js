@@ -193,6 +193,11 @@ const wsPayload = {
   replyToText: replyToMessage ? replyToMessage.text : null
 };
 
+const pickerDiv = document.querySelector('.emoji-picker-div');
+  if (pickerDiv.style.display === '') {
+    pickerDiv.style.display = 'none'
+  }
+
 
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify(wsPayload));
