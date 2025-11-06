@@ -27,7 +27,7 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-function cortarText(text, maxLength = 20) {
+function cortarText(text, maxLength = 40) {
   if (!text) return '';
   return text.length > maxLength ? text.substring(0, maxLength).trim() + '…' : text;
 }
@@ -39,7 +39,7 @@ const createSelfElement = (username, userColor, message, replyToText = null, rep
 
   section.innerHTML = `
     <p class="username" style='color: ${userColor};'>${username}</p>
-    ${replyToText ? `<div class="reply_to" title="Ver mensagem original"><span>Respondendo a:</span> ${escapeHtml(cortarText(replyToText))}</div>` : ""}
+    ${replyToText ? `<div class="reply_to" title="Ver mensagem original"><span>Respondendo a:</span> ${escapeHtml(cortarText(replyToText, 35))}</div>` : ""}
     <p class="message">${escapeHtml(message)}</p>
   `;
 
@@ -58,7 +58,7 @@ const createOtherElement = (username, userColor, message, replyToText = null, re
 
   section.innerHTML = `
     <p class="username" style='color: ${userColor};'>${username}</p>
-    ${replyToText ? `<div class="reply_to" title="Ver mensagem original"><span>Respondendo a:</span> ${escapeHtml(cortarText(replyToText))}</div>` : ""}
+    ${replyToText ? `<div class="reply_to" title="Ver mensagem original"><span>Respondendo a:</span> ${escapeHtml(cortarText(replyToText, 35))}</div>` : ""}
     <p class="message">${escapeHtml(message)}</p>
   `;
 
