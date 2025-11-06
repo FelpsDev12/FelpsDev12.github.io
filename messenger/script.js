@@ -396,4 +396,40 @@ window.addEventListener('load', async () => {
   await autoLogin();
   await getOtherStatus();
   setStatus();
+
+  const picker = new EmojiMart.Picker({
+    onEmojiSelect: emoji => {
+      input_message.value += emoji.native;
+    }
+  });
+
+  const pickerDiv = document.querySelector('.emoji-picker-div');
+  pickerDiv.appendChild(picker);
+
+  const shadowRoot = picker.shadowRoot;
+  if (shadowRoot) {
+    const removePreview = () => {
+      const preview = shadowRoot.querySelector('#preview');
+      if (preview) preview.style.display = 'none';
+    };
+    removePreview();
+
+    const observer = new MutationObserver(removePreview);
+    observer.observe(shadowRoot, { childList: true, subtree: true });
+  }
+
+  const botao = document.getElementById('emoji-picker');
+  botao.addEventListener('click', () => {
+    const visible = getComputedStyle(pickerDiv).display !== 'none';
+    pickerDiv.style.display = visible ? 'none' : '';
+  });
 });
+
+messages_box.addEventListener('click', async () => {
+  const pickerDiv = document.querySelector('.emoji-picker-div');
+  if (pickerDiv.style.display === '') {
+    pickerDiv.style.display = 'none'
+  }
+})
+
+
