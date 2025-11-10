@@ -3,6 +3,7 @@
     margin: 0;
     box-sizing: border-box;
     color: var(--branco_padrao);
+    border-radius: 10px;
 }
 
 :root {
@@ -36,7 +37,7 @@ header a svg {
 }
 
 header a svg g {
-    fill: orangered;
+    fill: #ff4500;
 }
 
 main {
@@ -50,22 +51,77 @@ main {
 .flex_userbox {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 6px;
 }
 
-.user_data {
+.user_dataF {
    display: flex;
     align-items: center;
     border: solid var(--branco_padrao);
     border-radius: 5px;
-    padding: 3px;
     gap: 6px;
     color: var(--branco_padrao);
+}
+
+.user_dataF > a {
+    width: 30px;
+    height: 30px;
+}
+
+.user_dataF > a > svg {
+    width: 100%;
+    height: 100%;
+}
+
+.user_dataJ {
+   display: flex;
+    align-items: center;
+    border: solid var(--branco_padrao);
+    border-radius: 5px;
+    gap: 6px;
+    color: var(--branco_padrao);
+}
+
+.user_dataJ > a {
+    width: 30px;
+    height: 30px;
+}
+
+.user_dataJ > a > svg {
+    width: 100%;
+    height: 100%;
+}
+
+.user_dataJ,
+.user_dataF {
+    padding: 3px 10px;
+}
+
+.add_humor {
+    display: flex;
+    align-items: center;
+    border: solid var(--branco_padrao);
+    border-radius: 90px;
+    align-self: self-start;
+    padding: 6px;
+    gap: 6px;
+    color: var(--branco_padrao);
+}
+
+.add_humor a {
+    width: 25px;
+    height: 25px;
+}
+
+.add_humor a svg {
+    width: 100%;
+    height: 100%;
 }
 
 .notifications {
     display: flex;
     align-items: center;
+    margin-left: auto;
     border: solid var(--branco_padrao);
     border-radius: 5px;
     padding: 3px;
@@ -87,6 +143,74 @@ main {
     align-items: center;
     border: solid orangered;
     padding: 5px;
+    gap: 10px;
+}
+
+#message_of_the_day {
+    outline: none;
+}
+
+.add_daily_message {
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: solid var(--branco_padrao);
+    padding: 5px;
+    gap: 10px;
+}
+
+.add_daily_message textarea::placeholder {
+    color: var(--branco_padrao);
+    text-align: center;
+}
+
+.flex_message {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 10px;
+}
+
+#send_message {
+    padding: 5px;
+}
+
+.add_daily_message textarea {
+    background: none;
+    font-size: 20px;
+    outline: none;
+    border: none;
+    resize: none;
+    width: 100%;
+    height: auto;
+}
+
+em-emoji-picker {
+    justify-self: center;
+    width: 320px;
+    height: 300px;
+}
+
+.add_daily_message button {
+    width: 45px;
+    height: 45px;
+    border: solid white;
+    background: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 90px;
+    font-size: 25px;
+}
+
+.add_daily_message button svg {
+  width: 100%;
+  height: 100%;
+}
+
+#emoji-picker {
+    justify-self: center;
+    margin-top: 10px;
 }
 
 .lembretes {
@@ -113,4 +237,46 @@ main {
     width: 100%;
     height: 100%;
     fill: var(--branco_padrao);
+}
+
+.humor_btns {
+    display: flex;
+    gap: 6px;
+    width: 0;
+}
+ 
+#add_reaction {
+    border: none;
+}
+
+#daily_message_reaction {
+    width: 60px;
+    height: 60px;
+    font-size: 40px;
+}
+
+@keyframes ativarEmocoes {
+    0% {
+        width: 50%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+.humor_btns-active {
+  animation: ativarEmocoes 0.7s ease-out forwards;
+}
+
+.humor_btns button {
+    width: 30px;
+    height: 30px;
+    border-radius: 90px;
+    background: transparent;
+    border: none;
+}
+
+.humor_btns button svg {
+    width: 100%;
+    height: 100%;
 }

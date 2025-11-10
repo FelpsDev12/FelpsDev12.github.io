@@ -11,6 +11,8 @@ const user_data = document.querySelector('.user_data');
 const loveable_icon = document.getElementById('loveable_icon_svg');
 const love_box = document.querySelector('.love_box');
 
+let wsurl = 'wss://backend-loveable.onrender.com'
+
 const WS_URL = 'wss://backend-loveable.onrender.com';
 const API_URL = 'https://backend-loveable.onrender.com';
 
@@ -26,64 +28,6 @@ const colors = ['#ffcc00', '#8505da', '#008000', '#00ffe5', '#ff4500', '#bbff00'
 function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
-
-async function Login() {
-  const username = username_input.value.trim();
-  if (!username) {
-    alert('Digite um nome de usuário!');
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error('Erro no login:', data);
-      alert(data.error || 'Erro ao fazer login');
-      return;
-    }
-
-    // salva dados no localStorage
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('userId', data.userId);
-    localStorage.setItem('username', data.username);
-
-    // define o usuário global
-    user = { id: data.userId, name: data.username, color: getRandomColor() };
-
-    auth_container.style.display = 'none';
-    main.style.display = '';
-
-    // abre conexão WebSocket
-    ws = new WebSocket(`${WS_URL}?token=${data.token}`);
-    ws.onmessage = processMessage;
-
-    // status online
-    await fetch(`${API_URL}/status/status-online`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${data.token}`
-      }
-    });
-
-    // carrega mensagens após login
-    await carregarMensagens();
-
-    console.log('✅ Login concluído:', user);
-
-  } catch (err) {
-    console.error('Erro ao logar:', err);
-    alert('Erro ao conectar ao servidor');
-  }
-}
-
 
 function cortarText(text, maxLength = 40) {
   if (!text) return '';
@@ -127,6 +71,58 @@ const createOtherElement = (username, userColor, message, replyToText = null, re
 
   return section;
 };
+
+async function Login() {
+  const username = username_input.value.trim();
+  if (!username) {
+    alert('Digite um nome de usuário!');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error('Erro no login:', data);
+      alert(data.error || 'Erro ao fazer login');
+      return;
+    }
+
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userId', data.userId);
+    localStorage.setItem('username', data.username);
+
+    user = { id: data.userId, name: data.username, color: getRandomColor() };
+
+    auth_container.style.display = 'none';
+    main.style.display = '';
+
+    ws = new WebSocket(`${WS_URL}?token=${data.token}`);
+    ws.onmessage = processMessage;
+
+    await fetch(`${API_URL}/status/status-online`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data.token}`
+      }
+    });
+
+    await carregarMensagens();
+
+    console.log('✅ Login concluído:', user);
+
+  } catch (err) {
+    console.error('Erro ao logar:', err);
+    alert('Erro ao conectar ao servidor');
+  }
+}
 
 function escapeHtml(str) {
   return String(str)
@@ -371,7 +367,7 @@ function setStatus() {
         </svg>
       </p>
       <a class="user_username" style='color:var(--branco_claro)'>
-        ${getUsername || 'Desconhecido'}
+        ${getUsername || 'Não encontrado'}
       </a>
     `;
   } else {
@@ -487,56 +483,12 @@ window.addEventListener('load', async () => {
     pickerDiv.style.display = visible ? 'none' : '';
   });
 });
-
-async function registrarPush() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    console.warn('Push API não suportada neste navegador.');
-    return;
-  }
-
-  // registra o service worker
-  const reg = await navigator.serviceWorker.register('/service-worker.js');
-  console.log('✅ Service Worker registrado:', reg);
-
-  // pede permissão
-  const permission = await Notification.requestPermission();
-  if (permission !== 'granted') {
-    console.warn('Permissão de notificação negada.');
-    return;
-  }
-
-  // gera a subscription
-  const subscription = await reg.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array('BOO3-1Im0LUbrys9S-_ysIRHfdEBmFCf-LyGIaQegHKX2MEAT71ACd6QkmdMfz8Ef_uqbKv_9PlVtEhzRMWnsxU')
-  });
-
-  // envia para o backend salvar no user
-  const token = localStorage.getItem('token');
-  await fetch(`${API_URL}/auth/save-subscription`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(subscription)
-  });
-
-  console.log('🔔 Subscription salva no servidor!');
-}
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = atob(base64);
-  return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
-}
+ 
 
 window.addEventListener('load', async () => {
   await autoLogin();
   await getOtherStatus();
   setStatus();
-  await registrarPush();
 });
 
 
@@ -546,6 +498,5 @@ messages_box.addEventListener('click', async () => {
     pickerDiv.style.display = 'none'
   }
 })
-
 
 
