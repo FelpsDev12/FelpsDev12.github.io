@@ -161,7 +161,7 @@ main {
     gap: 15px;
     margin-top: 9dvh;
     padding: 10px;
-    height: 67dvh;
+    height: 69dvh;
     overflow-y: auto;
 }
 
@@ -227,7 +227,7 @@ main {
     padding: 5px;
     width: 90%;
     gap: 10px;
-    margin-top: -70px;
+    margin-top: -100px;
     position: fixed;
     justify-content: space-between;
     border: solid black;
@@ -281,7 +281,7 @@ main {
     gap: 5px;
     align-items: center;
     align-self: center;
-    margin-top: 81dvh;
+    margin-top: 82dvh;
 }
 
 .emoji-picker-div {
@@ -295,7 +295,6 @@ em-emoji-picker {
     height: 300px;
     border: solid black 2px;
 }
-
 
 #emoji-picker {
     width: 30px;
@@ -332,3 +331,50 @@ em-emoji-picker {
     width: 100%;
     height: 100%;
 }
+
+#span {
+  font-size: 22px;
+  color: #333;
+  display: flex;
+  gap: 3px;
+  border: solid black;
+  justify-content: center;
+  background: white;
+  width: 40px;
+  border-radius: 10px;
+  margin-top: -5px;
+}
+
+.flexVisto {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#visto {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-left: 30px;
+    font-size: 12px;
+    color: white;
+}
+
+@keyframes Typing {
+    0% {bottom: 7px;}
+  25% { bottom: 15px; }
+  50% { bottom: 10px; }
+  75% {bottom: 5px;}
+  100% {bottom: 0px;}
+}
+
+#span strong {
+    position: relative;
+    display: inline-block;
+    animation: Typing 15s ease-in-out infinite;
+}
+
+#span strong:nth-child(1) {animation-delay: 0.3s;}
+#span strong:nth-child(2) {animation-delay: 0.6s;}
+#span strong:nth-child(3) {animation-delay: 0.9s;}
+

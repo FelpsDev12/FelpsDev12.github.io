@@ -290,6 +290,4 @@ window.addEventListener('load', async () => {
 
 setInterval(() => {
     getHumor()
-    get_day_message()
-
 }, 2000);

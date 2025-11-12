@@ -10,6 +10,8 @@ const btn_login = document.getElementById('btn_login');
 const user_data = document.querySelector('.user_data');
 const loveable_icon = document.getElementById('loveable_icon_svg');
 const love_box = document.querySelector('.love_box');
+const span = document.getElementById('span')
+const visto = document.getElementById('visto')
 
 let wsurl = 'wss://backend-loveable.onrender.com'
 
@@ -27,6 +29,48 @@ const colors = ['#ffcc00', '#8505da', '#008000', '#00ffe5', '#ff4500', '#bbff00'
 
 function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
+}
+
+async function getVisto() {
+  const token = localStorage.getItem('token')
+
+  try {
+    const res = await fetch(`${API_URL}/status/get-visto`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      return console.log(data.error);
+    }
+
+    const date = new Date()
+
+    const comparar = () => {
+      const dataAtual = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+
+      if (data.vistoData == dataAtual) {
+        return `Hoje`
+      } else {
+        return data.vistoData
+      }
+    }
+
+    const event = comparar()
+
+    visto.innerHTML = `<p id='vistoUltimo'>Visto por ultimo</p>
+    <div class='flexVisto'>
+    <p id='vistoData'>${event}</p>
+    <p id='vistoTime'>${data.vistoTime}</p>
+    </div>
+    `
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 function cortarText(text, maxLength = 40) {
@@ -189,7 +233,7 @@ async function carregarMensagens() {
 }
 
 const processMessage = ({ data }) => {
-   try {
+  try {
     const parsed = JSON.parse(data);
     const senderId = parsed.userId ?? parsed.userId;
     const username = parsed.username ?? parsed.user;
@@ -199,11 +243,11 @@ const processMessage = ({ data }) => {
     if (!messageText) return;
 
     const replyToText = parsed.replyToText ? cortarText(parsed.replyToText, 20) : null;
-const replyToId = parsed.replyTo || null;
+    const replyToId = parsed.replyTo || null;
 
-const element = String(senderId) === String(user?.id)
-  ? createSelfElement(username, userColor, messageText, replyToText, replyToId)
-  : createOtherElement(username, userColor, messageText, replyToText, replyToId);
+    const element = String(senderId) === String(user?.id)
+      ? createSelfElement(username, userColor, messageText, replyToText, replyToId)
+      : createOtherElement(username, userColor, messageText, replyToText, replyToId);
 
     messages_box.appendChild(element);
     element.dataset.messageId = parsed._id || crypto.randomUUID();
@@ -222,7 +266,7 @@ const element = String(senderId) === String(user?.id)
     if (!audioCooldown && String(senderId) !== String(user?.id) && messageText.trim() !== '') {
       const audio = new Audio('../assets/loveable_message.mp3');
       audio.volume = 1.0;
-      audio.play().catch(e => {});
+      audio.play().catch(e => { });
       audioCooldown = true;
       setTimeout(() => (audioCooldown = false), 700);
     }
@@ -238,16 +282,16 @@ const sendMessage = async () => {
   const content = input_message.value.trim();
   if (!content) return;
 
-const wsPayload = {
-  userId: user.id,
-  username: user.name,
-  userColor: user.color,
-  message: content,
-  replyTo: replyToMessage ? replyToMessage.id : null,
-  replyToText: replyToMessage ? replyToMessage.text : null
-};
+  const wsPayload = {
+    userId: user.id,
+    username: user.name,
+    userColor: user.color,
+    message: content,
+    replyTo: replyToMessage ? replyToMessage.id : null,
+    replyToText: replyToMessage ? replyToMessage.text : null
+  };
 
-const pickerDiv = document.querySelector('.emoji-picker-div');
+  const pickerDiv = document.querySelector('.emoji-picker-div');
   if (pickerDiv.style.display === '') {
     pickerDiv.style.display = 'none'
   }
@@ -315,7 +359,7 @@ function showReplyPreview(username, text) {
     replyPreview.className = 'reply_preview';
     input_box.prepend(replyPreview);
   }
- replyPreview.innerHTML = `
+  replyPreview.innerHTML = `
  <div class='juntarReplyPreview'>
   <b>Respondendo a ${escapeHtml(username)}:</b>
   <i>${escapeHtml(cortarText(text, 15))}</i>
@@ -370,6 +414,8 @@ function setStatus() {
         ${getUsername || 'Não encontrado'}
       </a>
     `;
+
+    visto.style.display = 'none'
   } else {
     loveable_icon.style.fill = 'orangered';
     user_data.innerHTML = `
@@ -384,6 +430,32 @@ function setStatus() {
         ${getUsername || 'Desconhecido'}
       </a>
     `;
+
+    visto.style.display = ''
+    getVisto()
+  }
+};
+
+async function getTyping() {
+  const token = localStorage.getItem('token')
+
+  const res = await fetch(`${API_URL}/status/get-typing`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  const data = await res.json()
+
+  if (!res.ok) {
+    return console.log(data.error);
+  }
+
+  if (data == false) {
+    span.style.display = 'none'
+  } else {
+    span.style.display = ''
   }
 }
 
@@ -450,6 +522,7 @@ window.addEventListener("beforeunload", async () => {
 
 setInterval(getOtherStatus, 3000);
 setInterval(setStatus, 1000);
+setInterval(getTyping, 1500);
 
 window.addEventListener('load', async () => {
   await autoLogin();
@@ -483,7 +556,7 @@ window.addEventListener('load', async () => {
     pickerDiv.style.display = visible ? 'none' : '';
   });
 });
- 
+
 
 window.addEventListener('load', async () => {
   await autoLogin();
@@ -491,6 +564,65 @@ window.addEventListener('load', async () => {
   setStatus();
 });
 
+let typingTimeout;
+let isTyping = false;
+
+input_message.addEventListener('input', async () => {
+  const token = localStorage.getItem('token')
+
+  if (!isTyping) {
+    isTyping = true;
+
+    try {
+      const res = await fetch(`${API_URL}/status/post-typing`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.error)
+        return;
+      }
+
+      console.log('Typing = true');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  clearTimeout(typingTimeout);
+
+  typingTimeout = setTimeout(async () => {
+    isTyping = false;
+
+    try {
+      const res = await fetch(`${API_URL}/status/typing-false`, {
+
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.error)
+        return;
+      }
+
+      console.log('Typing = false');
+    } catch (error) {
+      console.error(error);
+    }
+  }, 1000);
+})
 
 messages_box.addEventListener('click', async () => {
   const pickerDiv = document.querySelector('.emoji-picker-div');
