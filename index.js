@@ -15,7 +15,7 @@ const humorF = document.getElementById("humorF")
 const humorJ = document.getElementById("humorJ")
 
 
-const API_URL = 'https://backend-loveable.onrender.com';
+const API_URL = 'https://backend-loveable-4bhc.onrender.com';
 
 toggle.addEventListener('click', () => {
     if (pickerDiv.style.display === 'none') {
@@ -290,4 +290,5 @@ window.addEventListener('load', async () => {
 
 setInterval(() => {
     getHumor()
+
 }, 2000);
