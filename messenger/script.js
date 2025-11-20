@@ -13,10 +13,10 @@ const love_box = document.querySelector('.love_box');
 const span = document.getElementById('span')
 const visto = document.getElementById('visto')
 
-let wsurl = 'wss://backend-loveable.onrender.com'
+let wsurl = 'https://backend-loveable-4bhc.onrender.com'
 
-const WS_URL = 'wss://backend-loveable.onrender.com';
-const API_URL = 'https://backend-loveable.onrender.com';
+const WS_URL = 'wss://backend-loveable-4bhc.onrender.com';
+const API_URL = 'https://backend-loveable-4bhc.onrender.com';
 
 let user = null;
 let ws = null;
@@ -630,5 +630,6 @@ messages_box.addEventListener('click', async () => {
     pickerDiv.style.display = 'none'
   }
 })
+
 
 
